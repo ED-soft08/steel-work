@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Steel-work : piquages</title>
+<meta name="description" content="Développé de piquages de tuyauterie et gabarits à l'échelle 1:1.">
+<meta name="theme-color" content="#41525A">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#E9ECEC; --paper:#FFFFFF; --ink:#1B2328; --muted:#5C6A70; --line:#CDD5D7;
+  --steel:#41525A; --chalk:#E2B21C; --chalk-ink:#2E2400; --cut:#C2401F; --ok:#2E7D4F; --err-bg:#FBE3DC;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#12181B;--paper:#1B2327;--ink:#E3E8E6;--muted:#9AA8AE;--line:#2E3A3F;--steel:#8FA3AC;--chalk:#F0C53A;--chalk-ink:#241C00;--cut:#F07A55;--ok:#5CC28A;--err-bg:#3D1F17;}
+}
+:root[data-theme="dark"]{--bg:#12181B;--paper:#1B2327;--ink:#E3E8E6;--muted:#9AA8AE;--line:#2E3A3F;--steel:#8FA3AC;--chalk:#F0C53A;--chalk-ink:#241C00;--cut:#F07A55;--ok:#5CC28A;--err-bg:#3D1F17;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 14px 50px}
+header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:4px solid var(--steel);padding-bottom:10px;margin-bottom:16px}
+header h1{margin:0;font-size:2rem;letter-spacing:-.5px;font-weight:800}
+header p{margin:0;color:var(--muted)}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+@media (max-width:820px){.layout{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px}
+h2{font-size:1.25rem;margin:0 0 10px}
+label{display:block;font-weight:600;margin:12px 0 4px}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+input,select{width:100%;font:inherit;font-size:1.1rem;padding:11px 12px;border:2px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--chalk);outline-offset:2px}
+.unit{position:relative}
+.unit input{padding-right:48px}
+.unit span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600}
+.btn{display:block;width:100%;border:0;border-radius:7px;padding:15px;font:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;margin-top:12px}
+.btn.main{background:var(--chalk);color:var(--chalk-ink)}
+.btn.sec{background:var(--steel);color:#fff}
+.error{background:var(--err-bg);border-left:5px solid var(--cut);padding:10px 12px;border-radius:0 6px 6px 0;margin-top:12px;display:none}
+.views{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.views figure{margin:0;background:var(--bg);border-radius:6px;padding:6px}
+.views figcaption{font-size:.85rem;color:var(--muted);text-align:center}
+svg{display:block;width:100%;height:auto}
+.stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 0;font-size:.95rem}
+.stats b{font-size:1.05rem}
+.legend{font-size:.9rem;color:var(--muted);margin:8px 0 0}
+.tablewrap{overflow-x:auto;max-height:420px;overflow-y:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th{position:sticky;top:0;background:var(--paper);border-bottom:2px solid var(--ink);font-size:.9rem}
+td:first-child,th:first-child{text-align:center;font-weight:700}
+.printhelp{background:var(--bg);border-radius:6px;padding:10px 12px;font-size:.92rem;margin-top:10px}
+.printhelp ol{margin:4px 0;padding-left:20px}
+.note{font-size:.9rem;color:var(--muted)}
+.mt{margin-top:16px}
+.grp{border:1px solid var(--line);border-radius:8px;padding:6px 12px 12px;margin:0 0 12px}
+.grp legend{font-weight:800;padding:0 6px;color:var(--steel)}
+.row-l{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0 4px}
+.lbl{font-weight:600}
+.seg{display:inline-flex;border:2px solid var(--steel);border-radius:7px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);font:inherit;font-weight:700;padding:6px 14px;cursor:pointer;min-width:52px}
+.seg button[aria-pressed="true"]{background:var(--steel);color:#fff}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{flex:1;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:7px 0;font:inherit;font-weight:700;cursor:pointer}
+.chips button.on{border-color:var(--chalk);background:var(--paper)}
+#print{display:none}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff;color:#000;font-size:11pt}
+  .wrap{display:none}
+  #print{display:block}
+  .page{width:277mm;height:189mm;overflow:hidden;page-break-after:always;break-after:page;position:relative;font-family:Arial,sans-serif}
+  .page:last-child{page-break-after:auto;break-after:auto}
+  .phead{height:7mm;font-size:9pt;display:flex;justify-content:space-between;border-bottom:.3mm solid #000}
+  .pfoot{position:absolute;bottom:0;left:0;right:0;height:11mm;font-size:8pt;display:flex;align-items:center;gap:6mm}
+  .page svg{width:auto}
+  .sum table{font-size:9pt}
+  .sum th,.sum td{padding:1mm 2mm;border-bottom:.2mm solid #999}
+  .sum th{position:static;background:#fff;border-bottom:.4mm solid #000}
+  .cols{column-count:3;column-gap:6mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Steel-work</h1><p>Développé de piquage cylindre sur cylindre, gabarit à l'échelle 1:1</p></header>
+
+  <div class="layout">
+    <section class="card" aria-labelledby="t-saisie">
+      <h2 id="t-saisie">1. Les mesures</h2>
+
+      <fieldset class="grp"><legend>Tube principal</legend>
+        <div class="row-l"><span class="lbl" id="lD">Diamètre extérieur</span>
+          <div class="seg" role="group" aria-label="Saisie du tube principal"><button type="button" data-tube="D" data-u="mm" aria-pressed="true">mm</button><button type="button" data-tube="D" data-u="dn" aria-pressed="false">DN</button></div></div>
+        <div class="unit" id="D-mm"><input id="D" inputmode="decimal" value="168,3" aria-labelledby="lD"><span>mm</span></div>
+        <select id="D-sel" aria-labelledby="lD" hidden></select>
+      </fieldset>
+
+      <fieldset class="grp"><legend>Piquage</legend>
+        <div class="row-l"><span class="lbl" id="ld">Diamètre extérieur</span>
+          <div class="seg" role="group" aria-label="Saisie du piquage"><button type="button" data-tube="d" data-u="mm" aria-pressed="true">mm</button><button type="button" data-tube="d" data-u="dn" aria-pressed="false">DN</button></div></div>
+        <div class="unit" id="d-mm"><input id="d" inputmode="decimal" value="88,9" aria-labelledby="ld"><span>mm</span></div>
+        <select id="d-sel" aria-labelledby="ld" hidden></select>
+        <label for="ep">Épaisseur</label>
+        <div class="unit"><input id="ep" inputmode="decimal" value="3,2"><span>mm</span></div>
+        <label for="mode">Mode de calcul
+          <span class="hint">Posé : le piquage repose sur le tube principal (cas courant).</span></label>
+        <select id="mode">
+          <option value="pose">Piquage posé : Ø intérieur du piquage sur Ø extérieur du tube</option>
+          <option value="ext">Diamètres extérieurs (sans tenir compte de l'épaisseur)</option>
+        </select>
+      </fieldset>
+
+      <fieldset class="grp"><legend>Position</legend>
+        <label for="ang">Angle entre les deux tubes <span class="hint">90° = perpendiculaire. Entre 20° et 90°.</span></label>
+        <div class="unit"><input id="ang" inputmode="decimal" value="90"><span>°</span></div>
+        <div class="chips"><button type="button" data-ang="90">90°</button><button type="button" data-ang="60">60°</button><button type="button" data-ang="45">45°</button><button type="button" data-ang="30">30°</button></div>
+        <label for="e">Décalage (excentration) <span class="hint">0 = concentrique (axes qui se coupent).</span></label>
+        <div class="unit"><input id="e" inputmode="decimal" value="0"><span>mm</span></div>
+      </fieldset>
+
+      <fieldset class="grp"><legend>Traçage</legend>
+        <label for="n">Nombre de points</label>
+        <select id="n"><option>8</option><option>12</option><option selected>16</option><option>24</option><option>32</option><option>48</option><option>64</option></select>
+        <label for="m">Ligne de référence <span class="hint">Distance entre le point le plus haut de la coupe et le bord droit du gabarit.</span></label>
+        <div class="unit"><input id="m" inputmode="decimal" value="30"><span>mm</span></div>
+      </fieldset>
+
+      <button class="btn main" id="calc">Calculer le développé</button>
+      <div class="error" id="err" role="alert"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-labelledby="t-vues">
+        <h2 id="t-vues">2. Vérifier la configuration</h2>
+        <div class="views">
+          <figure><div id="vSide"></div><figcaption>Vue de côté (angle)</figcaption></figure>
+          <figure><div id="vEnd"></div><figcaption>Vue en bout (décalage)</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="card mt" aria-labelledby="t-dev">
+        <h2 id="t-dev">3. Le développé</h2>
+        <div id="dev"></div>
+        <div class="stats" id="stats"></div>
+        <p class="legend">Bord du haut = ligne de référence (bord droit du papier). Courbe rouge = ligne de coupe. Les traits verticaux sont les génératrices numérotées.
+          <b>Génératrice 0</b> : côté de l'angle obtus (talon). <b id="gHalf">8</b> : côté de l'angle aigu. <b id="gQuart">4</b> : côté du décalage.</p>
+      </section>
+
+      <section class="card mt" aria-labelledby="t-tab">
+        <h2 id="t-tab">4. Tableau des cotes</h2>
+        <p class="note" style="margin-top:0">Position : distance mesurée le long de la circonférence extérieure du piquage, depuis la génératrice 0. Cote : distance depuis la ligne de référence jusqu'à la coupe.</p>
+        <div class="tablewrap"><table><thead><tr><th>N°</th><th>Angle</th><th>Position (mm)</th><th>Cote (mm)</th></tr></thead><tbody id="tbody"></tbody></table></div>
+      </section>
+
+      <section class="card mt" aria-labelledby="t-print">
+        <h2 id="t-print">5. Imprimer le gabarit</h2>
+        <p id="pinfo" style="margin:0"></p>
+        <button class="btn sec" id="print-btn">Imprimer ou enregistrer en PDF</button>
+        <div class="printhelp">
+          <b>Pour que l'échelle 1:1 soit juste :</b>
+          <ol>
+            <li>Dans la fenêtre d'impression, choisissez <b>Taille réelle</b> ou <b>Échelle 100 %</b>, jamais « Ajuster à la page ».</li>
+            <li>Orientation <b>paysage</b>, papier <b>A4</b>. Pour un PDF : choisissez « Enregistrer au format PDF ».</li>
+            <li>Mesurez le trait de contrôle de 100 mm sur chaque page. S'il ne fait pas 100 mm, ne l'utilisez pas.</li>
+            <li>Assemblez les pages avec les croix de repère, en collant sur les bandes grises.</li>
+          </ol>
+        </div>
+        <p class="note">DN : diamètres extérieurs selon ISO / EN 10220. En norme américaine (ASME), DN 65 = 73,0 mm et DN 125 = 141,3 mm : utilisez alors la saisie en mm.</p>
+        <p class="note">Vérifiez toujours le premier gabarit sur une chute de tube avant une pièce réelle.</p>
+      </section>
+    </div>
+  </div>
+
+<p class="note" style="text-align:center;margin-top:24px" id="ver">Steel-work · version 1</p>
+</div>
+<div id="print"></div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id);};
+var R=null; // dernier résultat
+
+function num(id){var v=parseFloat(String($(id).value).replace(',','.').trim());return v;}
+function f1(v){return (Math.round(v*10)/10).toFixed(1).replace('.',',');}
+
+function read(){
+  return {D:num('D'),d:num('d'),ep:num('ep'),ang:num('ang'),e:num('e'),n:parseInt($('n').value,10),m:num('m'),mode:$('mode').value};
+}
+function check(P){
+  var bad=[];
+  ['D','d','ep','ang','e','m'].forEach(function(k){if(isNaN(P[k])) bad.push("une valeur n'est pas un nombre");});
+  if(bad.length) return "Vérifiez les cases : chaque mesure doit être un nombre (virgule ou point acceptés).";
+  if(P.D<=0||P.d<=0) return "Les diamètres doivent être plus grands que 0.";
+  if(P.ep<0||P.ep>=P.d/2) return "L'épaisseur doit être plus petite que la moitié du diamètre du piquage.";
+  if(P.ang<20||P.ang>90) return "L'angle doit être compris entre 20° et 90°.";
+  if(P.m<0) return "La distance de la ligne de référence ne peut pas être négative.";
+  var rc=P.mode==='pose'?P.d/2-P.ep:P.d/2, Rc=P.D/2;
+  if(Math.abs(P.e)+rc>Rc+1e-9){
+    var maxE=Rc-rc;
+    if(maxE<0) return "Le piquage est plus gros que le tube principal : ce montage n'est pas possible.";
+    return "Décalage trop grand : le piquage dépasserait du tube principal. Décalage maximum : "+f1(maxE)+" mm.";
+  }
+  return null;
+}
+
+function compute(P){
+  var Rc=P.D/2, rext=P.d/2, rc=P.mode==='pose'?rext-P.ep:rext;
+  var a=P.ang*Math.PI/180, sa=Math.sin(a), ca=Math.cos(a);
+  function t(th){var y=P.e+rc*Math.sin(th);var z=Math.sqrt(Math.max(0,Rc*Rc-y*y));return (z-rc*Math.cos(th)*ca)/sa;}
+  var curve=[],tmax=-Infinity,tmin=Infinity,i,th,v;
+  for(i=0;i<=1440;i++){th=i/1440*2*Math.PI;v=t(th);curve.push([th,v]);if(v>tmax)tmax=v;if(v<tmin)tmin=v;}
+  var C=Math.PI*P.d;
+  var L=function(tv){return tmax+P.m-tv;};
+  var pts=[];
+  for(var k=0;k<P.n;k++){th=k/P.n*2*Math.PI;pts.push({k:k,deg:k*360/P.n,s:th*rext,L:L(t(th))});}
+  var cv=curve.map(function(c){return [c[0]*rext,L(c[1])];});
+  return {P:P,C:C,pts:pts,cv:cv,Lmin:P.m,Lmax:tmax-tmin+P.m};
+}
+
+/* ---------- Dessins ---------- */
+function polyline(arr){return arr.map(function(p){return p[0].toFixed(2)+','+p[1].toFixed(2);}).join(' ');}
+
+function patternSVG(res,o){
+  // o: {sw: épaisseur trait, fs: taille texte}
+  var C=res.C,s='';
+  s+='<polygon points="0,0 '+polyline(res.cv)+' '+C.toFixed(2)+',0" fill="'+o.fill+'" stroke="none"/>';
+  res.pts.forEach(function(p){
+    s+='<line x1="'+p.s.toFixed(2)+'" y1="0" x2="'+p.s.toFixed(2)+'" y2="'+p.L.toFixed(2)+'" stroke="'+o.gen+'" stroke-width="'+o.sw*0.6+'" stroke-dasharray="'+(o.sw*4)+' '+(o.sw*3)+'"/>';
+    s+='<text x="'+(p.s+o.fs*0.3).toFixed(2)+'" y="'+(o.fs*1.2).toFixed(2)+'" font-size="'+o.fs+'" fill="'+o.txt+'">'+p.k+'</text>';
+  });
+  s+='<line x1="'+C.toFixed(2)+'" y1="0" x2="'+C.toFixed(2)+'" y2="'+res.cv[res.cv.length-1][1].toFixed(2)+'" stroke="'+o.gen+'" stroke-width="'+o.sw*0.6+'"/>';
+  s+='<text x="'+(C+o.fs*0.3).toFixed(2)+'" y="'+(o.fs*1.2).toFixed(2)+'" font-size="'+o.fs+'" fill="'+o.txt+'">0</text>';
+  s+='<line x1="0" y1="0" x2="'+C.toFixed(2)+'" y2="0" stroke="'+o.ref+'" stroke-width="'+o.sw+'"/>';
+  s+='<polyline points="'+polyline(res.cv)+'" fill="none" stroke="'+o.cut+'" stroke-width="'+o.sw*1.6+'" stroke-linejoin="round"/>';
+  s+='<line x1="0" y1="0" x2="0" y2="'+res.cv[0][1].toFixed(2)+'" stroke="'+o.ref+'" stroke-width="'+o.sw+'"/>';
+  return s;
+}
+
+function drawDev(res){
+  var C=res.C,H=res.Lmax,pad=Math.max(C,H)*0.04,fs=Math.max(C/55,3);
+  var css=getComputedStyle(document.documentElement);
+  var o={sw:Math.max(C/500,0.4),fs:fs,fill:'rgba(226,178,28,.18)',gen:css.getPropertyValue('--muted'),txt:css.getPropertyValue('--ink'),ref:css.getPropertyValue('--ink'),cut:css.getPropertyValue('--cut')};
+  $('dev').innerHTML='<svg viewBox="'+(-pad)+' '+(-pad)+' '+(C+2*pad)+' '+(H+2*pad)+'" role="img" aria-label="Développé du piquage">'+patternSVG(res,o)+'</svg>';
+}
+
+function drawViews(P){
+  var css=getComputedStyle(document.documentElement),ink=css.getPropertyValue('--ink'),st=css.getPropertyValue('--steel'),ch=css.getPropertyValue('--chalk');
+  var Rc=P.D/2,r=P.d/2,a=P.ang*Math.PI/180;
+  // Vue de côté
+  var len=Rc+2.2*r, W=Math.max(Rc*2.6, Math.abs(Math.cos(a))*len+r*2+Rc), x0=-W, H1=len+Rc*1.3;
+  var dx=Math.cos(a),dz=Math.sin(a),px=-dz,pz=dx;
+  var b=[[px*r,pz*r],[px*r+dx*len,pz*r+dz*len],[-px*r+dx*len,-pz*r+dz*len],[-px*r,-pz*r]];
+  var side='<svg viewBox="'+(-W)+' '+(-len-r*0.4)+' '+(2*W)+' '+(len+Rc+r*0.6)+'">'+
+    '<polygon points="'+b.map(function(q){return q[0].toFixed(1)+','+(-q[1]).toFixed(1);}).join(' ')+'" fill="'+ch+'" stroke="'+ink+'" stroke-width="'+(W/150)+'"/>'+
+    '<rect x="'+(-W*0.95)+'" y="'+(-Rc)+'" width="'+(W*1.9)+'" height="'+(2*Rc)+'" fill="'+st+'" stroke="'+ink+'" stroke-width="'+(W/150)+'"/>'+
+    '<text x="'+(-W*0.9)+'" y="'+(Rc*0.25)+'" font-size="'+(W/9)+'" fill="#fff">'+f1(P.ang)+'°</text></svg>';
+  // Vue en bout
+  var W2=Rc*1.4,top=Rc+2*r;
+  var end='<svg viewBox="'+(-W2)+' '+(-top)+' '+(2*W2)+' '+(top+Rc*1.15)+'">'+
+    '<rect x="'+(P.e-r).toFixed(1)+'" y="'+(-top)+'" width="'+(2*r).toFixed(1)+'" height="'+top+'" fill="'+ch+'" stroke="'+ink+'" stroke-width="'+(W2/120)+'"/>'+
+    '<circle cx="0" cy="0" r="'+Rc+'" fill="'+st+'" stroke="'+ink+'" stroke-width="'+(W2/120)+'"/>'+
+    '<line x1="0" y1="'+(-top)+'" x2="0" y2="'+Rc+'" stroke="'+ink+'" stroke-width="'+(W2/200)+'" stroke-dasharray="'+(W2/40)+' '+(W2/60)+'"/>'+
+    (P.e?'<text x="0" y="'+(Rc*1.1)+'" font-size="'+(W2/9)+'" text-anchor="middle" fill="'+ink+'">décalage '+f1(P.e)+' mm</text>':'')+'</svg>';
+  $('vSide').innerHTML=side; $('vEnd').innerHTML=end;
+}
+
+/* ---------- Impression en mosaïque A4 ---------- */
+var PW=277, PH=189, HEAD=7, FOOT=11, OV=10;
+function tiles(res){
+  var W=PW, H=PH-HEAD-FOOT, X0=-5, Y0=-8, X1=res.C+5, Y1=res.Lmax+8;
+  var nx=Math.max(1,Math.ceil((X1-X0-OV)/(W-OV))), ny=Math.max(1,Math.ceil((Y1-Y0-OV)/(H-OV)));
+  return {W:W,H:H,X0:X0,Y0:Y0,nx:nx,ny:ny};
+}
+function buildPrint(res){
+  var P=res.P,T=tiles(res),total=T.nx*T.ny+1,h='';
+  // Page récapitulative
+  h+='<div class="page sum"><div class="phead"><b>Steel-work : piquage cylindre sur cylindre</b><span>Page 1/'+total+' : récapitulatif</span></div>'+
+     '<p style="margin:3mm 0">Tube principal Ø '+f1(P.D)+' mm · Piquage Ø '+f1(P.d)+' × '+f1(P.ep)+' mm · Angle '+f1(P.ang)+'° · Décalage '+f1(P.e)+' mm · '+P.n+' points · Mode : '+(P.mode==='pose'?'posé':'diamètres extérieurs')+'<br>'+
+     'Développé : '+f1(res.C)+' mm de long · cote mini '+f1(res.Lmin)+' mm · cote maxi '+f1(res.Lmax)+' mm · gabarit sur '+(total-1)+' page(s).</p>'+
+     '<div class="cols"><table><thead><tr><th>N°</th><th>Angle</th><th>Position</th><th>Cote</th></tr></thead><tbody>'+
+     res.pts.map(function(p){return '<tr><td>'+p.k+'</td><td>'+f1(p.deg)+'°</td><td>'+f1(p.s)+'</td><td>'+f1(p.L)+'</td></tr>';}).join('')+
+     '</tbody></table></div><p style="font-size:8pt;margin-top:3mm">Génératrice 0 : côté de l\'angle obtus (talon). Génératrice '+(P.n/2)+' : côté de l\'angle aigu. Génératrice '+(P.n/4)+' : côté du décalage. Toutes les cotes en mm, depuis la ligne de référence.</p></div>';
+  var o={sw:0.3,fs:3.2,fill:'#f3f3f3',gen:'#666',txt:'#000',ref:'#000',cut:'#000'};
+  var art=patternSVG(res,o), pg=2;
+  for(var j=0;j<T.ny;j++) for(var i=0;i<T.nx;i++){
+    var x0=T.X0+i*(T.W-OV), y0=T.Y0+j*(T.H-OV), extra='';
+    if(i<T.nx-1) extra+='<rect x="'+(x0+T.W-OV)+'" y="'+y0+'" width="'+OV+'" height="'+T.H+'" fill="#ccc" opacity=".45"/><text x="'+(x0+T.W-OV+1)+'" y="'+(y0+T.H/2)+'" font-size="3" fill="#333">coller</text>';
+    if(j<T.ny-1) extra+='<rect x="'+x0+'" y="'+(y0+T.H-OV)+'" width="'+T.W+'" height="'+OV+'" fill="#ccc" opacity=".45"/>';
+    [[x0+OV/2,y0+OV/2],[x0+T.W-OV/2,y0+OV/2],[x0+OV/2,y0+T.H-OV/2],[x0+T.W-OV/2,y0+T.H-OV/2]].forEach(function(c){
+      extra+='<path d="M'+(c[0]-3)+' '+c[1]+'h6M'+c[0]+' '+(c[1]-3)+'v6" stroke="#000" stroke-width=".25"/><circle cx="'+c[0]+'" cy="'+c[1]+'" r="1.5" fill="none" stroke="#000" stroke-width=".2"/>';
+    });
+    h+='<div class="page"><div class="phead"><b>Steel-work · gabarit 1:1 · Ø'+f1(P.d)+' sur Ø'+f1(P.D)+' · '+f1(P.ang)+'° · décalage '+f1(P.e)+'</b><span>Page '+pg+'/'+total+' · ligne '+(j+1)+', colonne '+(i+1)+'</span></div>'+
+       '<svg width="'+T.W+'mm" height="'+T.H+'mm" viewBox="'+x0+' '+y0+' '+T.W+' '+T.H+'" xmlns="http://www.w3.org/2000/svg">'+art+extra+'</svg>'+
+       '<div class="pfoot"><svg width="104mm" height="8mm" viewBox="-2 0 104 8"><line x1="0" y1="4" x2="100" y2="4" stroke="#000" stroke-width=".5"/><line x1="0" y1="1" x2="0" y2="7" stroke="#000" stroke-width=".4"/><line x1="100" y1="1" x2="100" y2="7" stroke="#000" stroke-width=".4"/></svg>'+
+       '<span>Ce trait doit mesurer <b>exactement 100 mm</b>. Sinon, réimprimez en « Taille réelle / 100 % ». Courbe = ligne de coupe ; bord du haut = ligne de référence.</span></div></div>';
+    pg++;
+  }
+  $('print').innerHTML=h;
+}
+
+/* ---------- Affichage ---------- */
+function run(){
+  var P=read(), msg=check(P); markChips();
+  drawViewsSafe(P);
+  if(msg){$('err').textContent=msg;$('err').style.display='block';return false;}
+  $('err').style.display='none';
+  R=compute(P);
+  drawDev(R);
+  $('gHalf').textContent=P.n/2; $('gQuart').textContent=P.n/4;
+  $('stats').innerHTML='<span>Longueur développée : <b>'+f1(R.C)+' mm</b></span><span>Cote mini : <b>'+f1(R.Lmin)+' mm</b></span><span>Cote maxi : <b>'+f1(R.Lmax)+' mm</b></span>';
+  $('tbody').innerHTML=R.pts.map(function(p){return '<tr><td>'+p.k+'</td><td>'+f1(p.deg)+'°</td><td>'+f1(p.s)+'</td><td>'+f1(p.L)+'</td></tr>';}).join('');
+  var T=tiles(R);
+  $('pinfo').innerHTML='Le gabarit mesure <b>'+f1(R.C)+' × '+f1(R.Lmax)+' mm</b> : il sera imprimé sur <b>'+(T.nx*T.ny)+' page(s) A4</b> en paysage, plus une page récapitulative avec le tableau.';
+  return true;
+}
+function drawViewsSafe(P){
+  if(!isNaN(P.D)&&!isNaN(P.d)&&!isNaN(P.ang)&&!isNaN(P.e)&&P.D>0&&P.d>0&&P.ang>=20&&P.ang<=90){try{drawViews(P);}catch(e){}}
+}
+
+/* ---------- DN (diamètres extérieurs normalisés ISO / EN 10220) ---------- */
+var DN=[[15,21.3],[20,26.9],[25,33.7],[32,42.4],[40,48.3],[50,60.3],[65,76.1],[80,88.9],[100,114.3],[125,139.7],[150,168.3],[200,219.1],[250,273],[300,323.9],[350,355.6],[400,406.4],[450,457],[500,508],[600,610]];
+function fillDN(sel){sel.innerHTML=DN.map(function(x){return '<option value="'+x[1]+'">DN '+x[0]+'  —  Ø '+String(x[1]).replace('.',',')+' mm</option>';}).join('');}
+function nearest(v){var b=DN[0];DN.forEach(function(x){if(Math.abs(x[1]-v)<Math.abs(b[1]-v))b=x;});return b;}
+function setUnit(tube,u){
+  var inp=$(tube),sel=$(tube+'-sel'),box=$(tube+'-mm');
+  document.querySelectorAll('[data-tube="'+tube+'"]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-u')===u));});
+  if(u==='dn'){var v=num(tube);var x=nearest(isNaN(v)?100:v);sel.value=String(x[1]);inp.value=String(x[1]).replace('.',',');box.hidden=true;sel.hidden=false;}
+  else{box.hidden=false;sel.hidden=true;}
+  run();
+}
+['D','d'].forEach(function(t){
+  fillDN($(t+'-sel'));
+  $(t+'-sel').addEventListener('change',function(){$(t).value=this.value.replace('.',',');run();});
+});
+document.querySelectorAll('[data-tube]').forEach(function(b){b.addEventListener('click',function(){setUnit(b.getAttribute('data-tube'),b.getAttribute('data-u'));});});
+document.querySelectorAll('[data-ang]').forEach(function(b){b.addEventListener('click',function(){$('ang').value=b.getAttribute('data-ang');run();});});
+function markChips(){var a=num('ang');document.querySelectorAll('[data-ang]').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-ang')===a);});}
+
+$('calc').addEventListener('click',function(){ if(run()) document.getElementById('t-dev').scrollIntoView({behavior:'smooth'}); });
+['D','d','ep','ang','e','m'].forEach(function(id){$(id).addEventListener('input',function(){run();});});
+['n','mode'].forEach(function(id){$(id).addEventListener('change',run);});
+$('print-btn').addEventListener('click',function(){ if(!run()) return; buildPrint(R); window.print(); });
+if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener && window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',run);
+run();
+})();
+/* ---------- Installation et hors ligne (PWA) ---------- */
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); });
+}
+</script>
+</body>
+</html>
